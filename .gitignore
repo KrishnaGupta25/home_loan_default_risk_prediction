@@ -1,0 +1,34 @@
+
+# Local development artifacts
+artifacts_local/
+*.log
+output.png
+.streamlit/secrets.toml
+
+# Local datasets
+Data/
+data/
+*.csv~
+
+# Virtual environment
+venv/
+venv311/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
