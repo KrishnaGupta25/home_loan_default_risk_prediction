@@ -438,7 +438,7 @@ div[data-testid="stDataFrame"]{
 .cm-cell .cm-tag{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-top:4px; opacity:.75;}
 .cm-tn{ background:var(--green-bg); color:var(--green);} .cm-fp{ background:var(--orange-bg); color:var(--orange);}
 .cm-fn{ background:var(--red-bg); color:var(--red);} .cm-tp{ background:var(--blue-light); color:var(--blue-dark);}
-.cm-axis{ font-size:9.5px; font-weight:700; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.04em; text-align:center; padding-top:6px;}
+.cm-axis{ font-size:9.5px; font-weight:800; color:#000000; text-transform:uppercase; letter-spacing:.04em; text-align:center; padding-top:6px;}
 
 /* ---------- model tags / metric rows ---------- */
 .model-tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:7px 13px; border-radius:8px; background:var(--canvas); border:1px solid var(--line); color:var(--ink-soft); margin:0 6px 8px 0;}
@@ -934,6 +934,28 @@ def kpi_card(icon, label, value, sub, mono=False):
 
 
 PLOTLY_CONFIG = {"displayModeBar": False}
+CHART_FONT = dict(family="Inter", size=12, color="#000000")
+CHART_AXIS_STYLE = dict(
+    title_font=dict(color="#000000", size=12),
+    tickfont=dict(color="#000000", size=11),
+    linecolor="#000000",
+    zerolinecolor="#000000",
+)
+
+
+def make_chart_text_black(fig):
+    fig.update_layout(
+        font=CHART_FONT,
+        legend=dict(font=dict(color="#000000", size=11)),
+        hoverlabel=dict(
+            bgcolor="#FFFFFF",
+            bordercolor="#D0D5DD",
+            font=dict(color="#000000", size=12, family="Inter"),
+        ),
+    )
+    fig.update_xaxes(**CHART_AXIS_STYLE)
+    fig.update_yaxes(**CHART_AXIS_STYLE)
+    return fig
 BLUE = "#2563EB"
 BLUE_LIGHT = "#C7D9FB"
 GREEN = "#12805C"
@@ -1459,6 +1481,7 @@ elif selected == "Model Performance":
                 orientation="h",
                 text=[f"{v:.3f}" for v in top_models[rank_metric]],
                 textposition="outside",
+                textfont=dict(color="#000000", size=11, family="Inter"),
                 marker=dict(color=top_colors, line=dict(color="white", width=1)),
                 hovertemplate=f"<b>%{{y}}</b><br>{rank_metric}: %{{x:.3f}}<extra></extra>",
             )
@@ -1470,9 +1493,10 @@ elif selected == "Model Performance":
             yaxis=dict(autorange="reversed", title=None),
             plot_bgcolor="white",
             paper_bgcolor="white",
-            font=dict(family="Inter", size=11, color="#344054"),
+            font=CHART_FONT,
             showlegend=False,
         )
+        make_chart_text_black(fig)
         st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with chart_2:
@@ -1497,7 +1521,7 @@ elif selected == "Model Performance":
                 mode="markers+text",
                 text=marker_labels,
                 textposition="middle center",
-                textfont=dict(color="white", size=10, family="Inter"),
+                textfont=dict(color="#000000", size=10, family="Inter"),
                 marker=dict(
                     size=[34 if b else 26 for b in top_models["best"]],
                     color=top_colors,
@@ -1515,9 +1539,10 @@ elif selected == "Model Performance":
             yaxis=dict(title="Recall", range=[0, 1], gridcolor="#EEF1F6"),
             plot_bgcolor="white",
             paper_bgcolor="white",
-            font=dict(family="Inter", size=11, color="#344054"),
+            font=CHART_FONT,
             showlegend=False,
         )
+        make_chart_text_black(fig2)
         st.plotly_chart(fig2, use_container_width=True, config=PLOTLY_CONFIG)
 
         legend_items = []
@@ -1576,7 +1601,7 @@ elif selected == "Model Performance":
             bgcolor="white",
             bordercolor="#B42318",
             borderwidth=1,
-            font=dict(size=10, color="#101820"),
+            font=dict(size=10, color="#000000"),
         )
         fig3.update_layout(
             height=380,
@@ -1586,8 +1611,9 @@ elif selected == "Model Performance":
             legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
             plot_bgcolor="white",
             paper_bgcolor="white",
-            font=dict(family="Inter", size=11, color="#344054"),
+            font=CHART_FONT,
         )
+        make_chart_text_black(fig3)
         st.plotly_chart(fig3, use_container_width=True, config=PLOTLY_CONFIG)
 
     with lower_2:
