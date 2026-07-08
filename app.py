@@ -663,6 +663,121 @@ section[data-testid="stFileUploaderDropzone"] button{
   font-weight:500;
 }
 .perf-note b{ color:var(--ink); }
+.perf-insight{
+  background:#FFFFFF;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:18px;
+  box-shadow:0 1px 2px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.045);
+}
+.perf-insight-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.perf-insight-title{ color:var(--ink); font-size:14px; font-weight:800; margin-bottom:3px; }
+.perf-insight-sub{ color:var(--ink-mute); font-size:11.5px; line-height:1.45; font-weight:600; }
+.perf-insight-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+  margin-bottom:14px;
+}
+.perf-insight-tile{
+  background:#F8FAFC;
+  border:1px solid var(--line-soft);
+  border-radius:8px;
+  padding:13px 12px;
+  min-height:86px;
+}
+.perf-insight-tile .k{
+  color:var(--ink-mute);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  margin-bottom:7px;
+}
+.perf-insight-tile .v{
+  color:var(--ink);
+  font-family:'Manrope',sans-serif;
+  font-size:18px;
+  font-weight:800;
+  line-height:1.15;
+}
+.perf-insight-tile .s{ color:var(--ink-mute); font-size:11px; font-weight:600; margin-top:5px; line-height:1.35; }
+.review-flow{
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr;
+  align-items:stretch;
+  gap:8px;
+}
+.review-stage{
+  border:1px solid var(--line-soft);
+  border-radius:8px;
+  padding:11px 10px;
+  background:#FFFFFF;
+}
+.review-stage .label{ color:var(--ink-mute); font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+.review-stage .name{ color:var(--ink); font-size:12.3px; font-weight:800; line-height:1.25; }
+.review-arrow{ color:var(--blue-dark); font-weight:900; align-self:center; }
+.impact-band{
+  margin-top:14px;
+  background:linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  border:1px solid var(--line-soft);
+  border-radius:8px;
+  padding:15px;
+}
+.impact-band-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.impact-band-title{ color:var(--ink); font-size:12.8px; font-weight:800; }
+.impact-band-meta{ color:var(--blue-dark); background:var(--blue-light); border-radius:100px; padding:4px 8px; font-size:10px; font-weight:800; }
+.impact-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+.impact-item{
+  background:#FFFFFF;
+  border:1px solid var(--line-soft);
+  border-radius:8px;
+  padding:12px;
+}
+.impact-item .label{
+  color:var(--ink-mute);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  margin-bottom:8px;
+}
+.impact-bar{
+  height:8px;
+  background:#EEF2F7;
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:8px;
+}
+.impact-bar span{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:var(--brand-gradient);
+}
+.impact-item .copy{ color:var(--ink-soft); font-size:11.4px; font-weight:600; line-height:1.45; }
+@media (max-width: 980px){
+  .perf-insight-grid{ grid-template-columns:1fr; }
+  .review-flow{ grid-template-columns:1fr; }
+  .review-arrow{ display:none; }
+  .impact-grid{ grid-template-columns:1fr; }
+}
 .perf-table-wrap [data-testid="stDataFrame"]{ box-shadow:none; }
 .perf-summary-row{
   display:grid;
@@ -1554,8 +1669,86 @@ elif selected == "Model Performance":
                 f'<span class="v model">{escape_html(row["Model"])}</span>'
                 f'</div>'
             )
+    insight_col, legend_col = st.columns([1.15, 1])
+    with insight_col:
         st.markdown(
-            f'<div class="perf-note" style="margin-top:10px;">{"".join(legend_items)}</div>',
+            f"""
+            <div class="perf-insight">
+                <div class="perf-insight-head">
+                    <div>
+                        <div class="perf-insight-title">Risk Decision Intelligence</div>
+                        <div class="perf-insight-sub">Operational view of how the selected model supports credit review.</div>
+                    </div>
+                    <div class="perf-chip">Live policy</div>
+                </div>
+                <div class="perf-insight-grid">
+                    <div class="perf-insight-tile">
+                        <div class="k">Operating threshold</div>
+                        <div class="v">{threshold:.2f}</div>
+                        <div class="s">Scores at or above this point enter risk control.</div>
+                    </div>
+                    <div class="perf-insight-tile">
+                        <div class="k">Default coverage</div>
+                        <div class="v">{recall:.3f}</div>
+                        <div class="s">Recall focus helps surface risky borrowers earlier.</div>
+                    </div>
+                    <div class="perf-insight-tile">
+                        <div class="k">Signal strength</div>
+                        <div class="v">{roc_auc:.3f}</div>
+                        <div class="s">ROC-AUC reflects ranking quality across applicants.</div>
+                    </div>
+                </div>
+                <div class="review-flow">
+                    <div class="review-stage">
+                        <div class="label">Low probability</div>
+                        <div class="name">Fast-track approval</div>
+                    </div>
+                    <div class="review-arrow">-></div>
+                    <div class="review-stage">
+                        <div class="label">Near threshold</div>
+                        <div class="name">Manual analyst review</div>
+                    </div>
+                    <div class="review-arrow">-></div>
+                    <div class="review-stage">
+                        <div class="label">High probability</div>
+                        <div class="name">Reject or enhanced checks</div>
+                    </div>
+                </div>
+                <div class="impact-band">
+                    <div class="impact-band-head">
+                        <div class="impact-band-title">Review Impact Snapshot</div>
+                        <div class="impact-band-meta">{validation_size:,} validation rows</div>
+                    </div>
+                    <div class="impact-grid">
+                        <div class="impact-item">
+                            <div class="label">Default detection lift</div>
+                            <div class="impact-bar"><span style="width:{recall * 100:.0f}%;"></span></div>
+                            <div class="copy">Captures {recall * 100:.1f}% of observed default cases for earlier intervention.</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="label">Flag quality</div>
+                            <div class="impact-bar"><span style="width:{precision * 100:.0f}%;"></span></div>
+                            <div class="copy">{precision * 100:.1f}% of flagged applications are confirmed default cases.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with legend_col:
+        st.markdown(
+            f"""
+            <div class="perf-card">
+                <div class="perf-card-head">
+                    <div>
+                        <div class="perf-card-title">Marker Directory</div>
+                        <div class="perf-card-sub">Map each chart marker to its candidate model.</div>
+                    </div>
+                </div>
+                {"".join(legend_items)}
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
