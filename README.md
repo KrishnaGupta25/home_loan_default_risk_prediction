@@ -4,7 +4,7 @@ An end-to-end machine learning project that predicts home loan default risk usin
 
 ## Live App
 
-Deployment link: add your deployed Streamlit/Railway/Render URL here after publishing.
+Deployment link: https://homeloandefaultriskprediction-bykrishnagupta.streamlit.app/
 
 ## Project Overview
 
